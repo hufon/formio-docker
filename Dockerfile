@@ -33,6 +33,7 @@ COPY scripts/* ./
 RUN rm -rf /var/cache/apk/*
 
 RUN chmod g+rw /src/formio/client/dist/config.js
+RUN chmod g+rwx /src/formio
 
 EXPOSE 3001
 
