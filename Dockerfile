@@ -32,6 +32,8 @@ COPY scripts/* ./
 # Clean-up
 RUN rm -rf /var/cache/apk/*
 
+RUN chmod g+rw /src/formio/client/dist/config.js
+
 EXPOSE 3001
 
 CMD [ "npm", "start"]
