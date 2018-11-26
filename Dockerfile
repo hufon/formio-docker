@@ -1,38 +1,37 @@
-FROM node:10-alpine
-LABEL maintainer="Hubert FONGARNAND"
+# Use alpine-node image with nodejs v8
+FROM mhart/alpine-node:8
 
-### Disable Build in Services
-    ENV FORMIO_VERSION=v1.36.1 \
-        FORMIO_CLIENT_VERSION=master \
-        ENABLE_SMTP=FALSE \
-        ENABLE_CRON=FALSE
+# Intsall dependencies
+RUN apk add --no-cache make gcc g++ python git
 
-### Install Runtime Dependencies
-    RUN apk update && \
-        apk add \
-            expect \
-            git \
-            g++ \
-            jq \
-            make \
-            python \
-            && \
-        \
-        git clone -b $FORMIO_VERSION https://github.com/formio/formio.git /app/ && \
-        git clone -b $FORMIO_CLIENT_VERSION https://github.com/formio/formio-app-formio.git /app/client && \
-        \
-        cd /app && \
-        npm install && \
+# Clone Form.io server
+RUN git clone https://github.com/formio/formio.git /src/formio
 
-### Misc & Cleanup
-        mkdir -p /app/templates && \
-        rm -rf /tmp/* \
-        /var/cache/apk/*
+# Clone Form.io client
+RUN git clone https://github.com/formio/formio-app-formio.git /src/formio/client
 
-    WORKDIR /app/
+# Define the working directory
+WORKDIR /src/formio
 
-### Networking Configuration
-    EXPOSE 3001 
+# Downgrade npm (https://github.com/npm/npm/issues/19989#issuecomment-372155119)
+RUN npm install -g npm@5.6.0
+
+# Install packages
+RUN npm install
+
+# Fix missing 'node--paginate-anything' module - https://github.com/formio/formio/issues/615
+RUN npm install node-paginate-anything
+
+# Copy the templates directory
+COPY templates ./templates
+
+# Copy configuration and scripts
+COPY config ./config
+COPY scripts/* ./
+
+# Clean-up
+RUN rm -rf /var/cache/apk/*
 
 EXPOSE 3001
-CMD [ "npm", "start" ]
+
+CMD [ "npm", "start"]
