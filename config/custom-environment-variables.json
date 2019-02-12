@@ -17,7 +17,8 @@
   "settings": {
     "recaptcha": {
       "secretKey": "RECAPTCHA_SECRETKEY",
-      "siteKey": "RECAPTCHA_SITEKEY"
+      "siteKey": "RECAPTCHA_SITEKEY",
+      "isEnabled": "true"
     },
     "office365": {
       "tenant": "O365_TENANT",
