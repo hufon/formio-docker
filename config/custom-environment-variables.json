@@ -15,6 +15,10 @@
     "apiKey": "EMAIL_KEY"
   },
   "settings": {
+    "recaptcha": {
+      "secretKey": "RECAPTCHA_SECRETKEY",
+      "siteKey": "RECAPTCHA_SITEKEY"
+    },
     "office365": {
       "tenant": "O365_TENANT",
       "clientId": "O365_CLIENT_ID",
